@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>WISE5 FINAL</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body{font-family:Arial;padding:20px;background:#f4f6f8}
+h1{color:#2c3e50}
+
+button{
+  padding:10px 15px;
+  margin:5px;
+  background:#2ecc71;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+
+.row{margin:8px 0}
+label{display:inline-block;width:150px}
+input{padding:6px;width:200px}
+
+.box{
+  background:white;
+  padding:15px;
+  margin-top:15px;
+  border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>WISE5 ✅ FINAL</h1>
+
+<button onclick="runAnalysis()">RUN</button>
+<button onclick="compareMethods()">COMPARE</button>
+<button onclick="exportPDF()">PDF</button>
+
+<br><br>
+
+<div class="row"><label>Sample</label><input id="sample"></div>
+<div class="row"><label>Method</label><input id="method"></div>
+<div class="row"><label>Column</label><input id="column"></div>
+<div class="row"><label>Detector</label><input id="detector"></div>
+
+<hr>
+
+<div class="row"><label>Flow</label><input id="flow"></div>
+<div class="row"><label>Time</label><input id="time"></div>
+<div class="row"><label>Temp</label><input id="temp"></div>
+<div class="row"><label>Resolution</label><input id="res"></div>
+<div class="row"><label>Injection</label><input id="inj"></div>
+<div class="row"><label>pH</label><input id="ph"></div>
+
+<hr>
+
+<div class="row">
+<label>Flow A</label><input id="flowA">
+<label>Time A</label><input id="timeA">
+</div>
+
+<div class="row">
+<label>Flow B</label><input id="flowB">
+<label>Time B</label><input id="timeB">
+</div>
+
+<div class="box" id="out">Ready ✅</div>
+
+<canvas id="chart" width="350" height="350"></canvas>
+
+<script>
+
+let chart;
+
+// ✅ RUN
+function runAnalysis(){
+
+  let f = parseFloat(document.getElementById("flow").value)||1;
+  let t = parseFloat(document.getElementById("time").value)||1;
+  let tempVal = parseFloat(document.getElementById("temp").value)||25;
+  let resVal = parseFloat(document.getElementById("res").value)||1;
+  let injVal = parseFloat(document.getElementById("inj").value)||10;
+  let phVal = parseFloat(document.getElementById("ph").value)||7;
+
+  let op = (1/f + 1/t + (tempVal<40?1:tempVal<60?0.7:0.4))/3;
+  let perf = resVal>=2?1:resVal>=1.5?0.7:0.4;
+  let waste = (f*t*injVal)<200?1:0.6;
+  let phScore = (phVal>=6 && phVal<=8)?1:0.6;
+
+  let score = (op+perf+waste+phScore)/4;
+
+  let data = {
+    Operational:op,
+    Performance:perf,
+    Waste:waste,
+    pH:phScore
+  };
+
+  document.getElementById("out").innerHTML =
+    "<h2>Score = "+score.toFixed(2)+"</h2>";
+
+  drawChart(data);
+}
+
+// ✅ COMPARE
+function compareMethods(){
+
+  let fA = parseFloat(document.getElementById("flowA").value)||1;
+  let tA = parseFloat(document.getElementById("timeA").value)||1;
+
+  let fB = parseFloat(document.getElementById("flowB").value)||1;
+  let tB = parseFloat(document.getElementById("timeB").value)||1;
+
+  let A = (1/fA + 1/tA)/2;
+  let B = (1/fB + 1/tB)/2;
+
+  document.getElementById("out").innerHTML =
+    "Method A = "+A.toFixed(2)+"<br>Method B = "+B.toFixed(2);
+}
+
+// ✅ CHART
+function drawChart(data){
+
+  if(chart) chart.destroy();
+
+  chart=new Chart(document.getElementById("chart"),{
+    type:'radar',
+    data:{
+      labels:Object.keys(data),
+      datasets:[{
+        label:"Score",
+        data:Object.values(data),
+        backgroundColor:"rgba(46,204,113,0.2)",
+        borderColor:"#2ecc71"
+      }]
+    },
+    options:{
+      responsive:false,
+      animation:false,
+      scales:{ r:{min:0,max:1} }
+    }
+  });
+}
+
+// ✅ ✅ ✅ PDF
+
+function exportPDF(){
+
+  let canvas = document.getElementById("chart");
+  let img = canvas.toDataURL("image/png");
+
+  let w = window.open("");
+
+  w.document.write(`
+  <html>
+
+  <head>
+    <style>
+      body{
+        font-family:Arial;
+        padding:30px;
+        width:700px;
+        margin:auto;
+      }
+
+      /* ✅ الحل الحقيقي */
+      .figure{
+        page-break-inside: avoid;
+        break-inside: avoid;
+        text-align:center;
+      }
+    </style>
+  </head>
+
+  <body>
+
+  <h1 style="text-align:center">WISE5 Report</h1>
+
+  <h2>Sample Info</h2>
+  Sample: ${sample.value}<br>
+  Method: ${method.value}<br>
+  Column: ${column.value}<br>
+  Detector: ${detector.value}<br>
+
+  <hr>
+
+  <h2>Conditions</h2>
+  Flow: ${flow.value}<br>
+  Time: ${time.value}<br>
+  Temp: ${temp.value}<br>
+  Resolution: ${res.value}<br>
+  Injection: ${inj.value}<br>
+  pH: ${ph.value}<br>
+
+  <hr>
+
+  <h2>Results</h2>
+  ${document.getElementById("out").innerHTML}
+
+  <hr>
+
+  
+<h2>Figure</h2>
+
+<div style="
+  text-align:center;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  margin-top:10px;
+">
+
+  <img src="${img}" style="width:300px">
+
+</div>
+
+  </body>
+  </html>
+  `);
+
+  w.document.close();
+
+  setTimeout(()=>{w.print();},500);
+}
+
+</script>
+
+</body>
+</html>
