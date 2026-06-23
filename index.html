@@ -9,7 +9,12 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body{font-family:Arial;padding:20px;background:#f4f6f8}
+body{
+  font-family:Arial;
+  padding:20px;
+  background:#f4f6f8;
+}
+
 h1{color:#2c3e50}
 
 button{
@@ -37,6 +42,37 @@ input{padding:6px;width:200px}
 </head>
 
 <body>
+
+<!-- ✅ Landing Section -->
+<div style="
+  background:white;
+  padding:20px;
+  border-radius:10px;
+  margin-bottom:20px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.1);
+">
+
+<h1 style="text-align:center;">
+WISE5: Sustainability Assessment Tool for Chromatographic Methods
+</h1>
+
+<p style="text-align:center; font-size:14px; color:#555; max-width:800px; margin:auto;">
+WISE5 is a web-based analytical tool designed to evaluate sustainability of chromatographic methods 
+based on operational efficiency, performance, waste, and pH conditions.
+</p>
+
+<br>
+
+<div style="text-align:center;">
+  <button onclick="scrollToTool()" style="font-size:16px;">
+    Start Analysis
+  </button>
+</div>
+
+</div>
+
+<!-- ✅ نقطة النزول -->
+<div id="tool"></div>
 
 <h1>WISE5 ✅ FINAL</h1>
 
@@ -76,19 +112,30 @@ input{padding:6px;width:200px}
 
 <canvas id="chart" width="350" height="350"></canvas>
 
+<p style="text-align:center;font-size:12px;color:#555;">
+Figure 1: Radar plot illustrating sustainability performance metrics.
+</p>
+
 <script>
 
 let chart;
 
-// ✅ RUN
+// ✅ Smooth Scroll
+function scrollToTool(){
+  document.getElementById("tool").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+// RUN
 function runAnalysis(){
 
-  let f = parseFloat(document.getElementById("flow").value)||1;
-  let t = parseFloat(document.getElementById("time").value)||1;
-  let tempVal = parseFloat(document.getElementById("temp").value)||25;
-  let resVal = parseFloat(document.getElementById("res").value)||1;
-  let injVal = parseFloat(document.getElementById("inj").value)||10;
-  let phVal = parseFloat(document.getElementById("ph").value)||7;
+  let f = parseFloat(flow.value)||1;
+  let t = parseFloat(time.value)||1;
+  let tempVal = parseFloat(temp.value)||25;
+  let resVal = parseFloat(res.value)||1;
+  let injVal = parseFloat(inj.value)||10;
+  let phVal = parseFloat(ph.value)||7;
 
   let op = (1/f + 1/t + (tempVal<40?1:tempVal<60?0.7:0.4))/3;
   let perf = resVal>=2?1:resVal>=1.5?0.7:0.4;
@@ -97,36 +144,28 @@ function runAnalysis(){
 
   let score = (op+perf+waste+phScore)/4;
 
-  let data = {
+  document.getElementById("out").innerHTML =
+    "<h2>Score = "+score.toFixed(2)+"</h2>";
+
+  drawChart({
     Operational:op,
     Performance:perf,
     Waste:waste,
     pH:phScore
-  };
-
-  document.getElementById("out").innerHTML =
-    "<h2>Score = "+score.toFixed(2)+"</h2>";
-
-  drawChart(data);
+  });
 }
 
-// ✅ COMPARE
+// COMPARE
 function compareMethods(){
 
-  let fA = parseFloat(document.getElementById("flowA").value)||1;
-  let tA = parseFloat(document.getElementById("timeA").value)||1;
-
-  let fB = parseFloat(document.getElementById("flowB").value)||1;
-  let tB = parseFloat(document.getElementById("timeB").value)||1;
-
-  let A = (1/fA + 1/tA)/2;
-  let B = (1/fB + 1/tB)/2;
+  let A=(1/(flowA.value||1)+1/(timeA.value||1))/2;
+  let B=(1/(flowB.value||1)+1/(timeB.value||1))/2;
 
   document.getElementById("out").innerHTML =
     "Method A = "+A.toFixed(2)+"<br>Method B = "+B.toFixed(2);
 }
 
-// ✅ CHART
+// CHART
 function drawChart(data){
 
   if(chart) chart.destroy();
@@ -150,34 +189,24 @@ function drawChart(data){
   });
 }
 
-// ✅ ✅ ✅ PDF
-
+// PDF
 function exportPDF(){
 
-  let canvas = document.getElementById("chart");
-  let img = canvas.toDataURL("image/png");
+  let img = document.getElementById("chart").toDataURL("image/png");
 
   let w = window.open("");
 
   w.document.write(`
   <html>
-
   <head>
-    <style>
-      body{
-        font-family:Arial;
-        padding:30px;
-        width:700px;
-        margin:auto;
-      }
-
-      /* ✅ الحل الحقيقي */
-      .figure{
-        page-break-inside: avoid;
-        break-inside: avoid;
-        text-align:center;
-      }
-    </style>
+  <style>
+    body{font-family:Arial;padding:30px;width:700px;margin:auto}
+    .figure{
+      page-break-inside: avoid;
+      break-inside: avoid;
+      text-align:center;
+    }
+  </style>
   </head>
 
   <body>
@@ -207,8 +236,7 @@ function exportPDF(){
 
   <hr>
 
-  
-<h2>Figure</h2>
+  <h2>Figure</h2>
 
 <div style="
   text-align:center;
