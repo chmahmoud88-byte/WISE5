@@ -1,41 +1,48 @@
-
 <!DOCTYPE html>
 <html>
 
 <head>
 <meta charset="UTF-8">
-<title>WISE5 FINAL</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<title>WISE5 v2 PRO</title>
 
 <style>
 body{
-  font-family:Arial;
-  padding:20px;
-  background:#f4f6f8;
+ font-family:Arial;
+ background:#f4f6f8;
 }
 
-h1{color:#2c3e50}
+.container{
+ max-width:900px;
+ margin:auto;
+ padding:20px;
+}
+
+.section{
+ background:white;
+ padding:20px;
+ margin:15px 0;
+ border-radius:8px;
+}
+
+label{
+ display:inline-block;
+ width:200px;
+}
+
+input,select{
+ padding:5px;
+ width:180px;
+ margin:3px;
+}
 
 button{
-  padding:10px 15px;
-  margin:5px;
-  background:#2ecc71;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-
-.row{margin:8px 0}
-label{display:inline-block;width:150px}
-input{padding:6px;width:200px}
-
-.box{
-  background:white;
-  padding:15px;
-  margin-top:15px;
-  border-radius:8px;
+ padding:8px 12px;
+ background:#2ecc71;
+ color:white;
+ border:none;
+ border-radius:5px;
+ cursor:pointer;
+ margin:4px;
 }
 </style>
 
@@ -43,219 +50,324 @@ input{padding:6px;width:200px}
 
 <body>
 
-<!-- ✅ Landing Section -->
-<div style="
-  background:white;
-  padding:20px;
-  border-radius:10px;
-  margin-bottom:20px;
-  box-shadow:0 2px 8px rgba(0,0,0,0.1);
-">
+<div class="container">
 
-<h1 style="text-align:center;">
-WISE5: Sustainability Assessment Tool for Chromatographic Methods
-</h1>
+<!-- ✅ HEADER -->
+<div class="section" style="text-align:center;">
+<h2>WISE5 Sustainability Tool</h2>
+<p style="color:#666">Circular sustainability evaluation for chromatographic methods
 
-<p style="text-align:center; font-size:14px; color:#555; max-width:800px; margin:auto;">
-WISE5 is a web-based analytical tool designed to evaluate sustainability of chromatographic methods 
-based on operational efficiency, performance, waste, and pH conditions.
 </p>
 
-<br>
-
-<div style="text-align:center;">
-  <button onclick="scrollToTool()" style="font-size:16px;">
-    Start Analysis
-  </button>
+<div style="margin-top:10px;">
+<button onclick="startAnalysis()">Start Analysis</button>
+<button onclick="downloadPNG()">Export PNG</button>
 </div>
 
 </div>
 
-<!-- ✅ نقطة النزول -->
-<div id="tool"></div>
+<!-- ✅ CONDITIONS -->
+<div class="section" id="inputs">
 
-<h1>WISE5 ✅ FINAL</h1>
+<label>Flow</label><input id="flow"><br>
+<label>Time</label><input id="time"><br>
+<label>Temp</label><input id="temp"><br>
+<label>Resolution</label><input id="res"><br>
+<label>Injection</label><input id="inj"><br>
+<label>pH</label><input id="ph"><br>
 
-<button onclick="runAnalysis()">RUN</button>
-<button onclick="compareMethods()">COMPARE</button>
-<button onclick="exportPDF()">PDF</button>
-
-<br><br>
-
-<div class="row"><label>Sample</label><input id="sample"></div>
-<div class="row"><label>Method</label><input id="method"></div>
-<div class="row"><label>Column</label><input id="column"></div>
-<div class="row"><label>Detector</label><input id="detector"></div>
-
-<hr>
-
-<div class="row"><label>Flow</label><input id="flow"></div>
-<div class="row"><label>Time</label><input id="time"></div>
-<div class="row"><label>Temp</label><input id="temp"></div>
-<div class="row"><label>Resolution</label><input id="res"></div>
-<div class="row"><label>Injection</label><input id="inj"></div>
-<div class="row"><label>pH</label><input id="ph"></div>
-
-<hr>
-
-<div class="row">
-<label>Flow A</label><input id="flowA">
-<label>Time A</label><input id="timeA">
 </div>
 
-<div class="row">
-<label>Flow B</label><input id="flowB">
-<label>Time B</label><input id="timeB">
+<!-- ✅ GREEN -->
+<div class="section">
+
+
+<label>Solvent</label>
+<select id="solvent">
+
+<option value="1">Water</option>
+<option value="0.95">Buffer</option>
+<option value="0.9">Ethanol</option>
+<option value="0.85">Isopropanol</option>
+<option value="0.8">Ethyl acetate</option>
+<option value="0.7">Methanol</option>
+<option value="0.65">Butanol</option>
+<option value="0.6">Acetone</option>
+<option value="0.5">Dichloromethane</option>
+<option value="0.4">Acetonitrile</option>
+<option value="0.35">Chloroform</option>
+<option value="0.3">THF</option>
+<option value="0.25">Toluene</option>
+<option value="0.2">Hexane</option>
+
+<option value="custom">Custom</option>
+
+</select>
+
+<input id="customSolvent"
+placeholder="Enter score (0–1)"
+style="display:none;"><br>
+
+<label>Organic %</label>
+<input id="organic"><br>
+
+<label>Instrument</label>
+<select id="instrument">
+<option value="1">UPLC</option>
+<option value="0.7">HPLC</option>
+</select><br>
+
+<label>Analytes</label>
+<input id="analytes"><br>
+
+
+<label>Hazard</label>
+<select id="hazard">
+
+<option value="1">None</option>
+<option value="0.95">Water / Buffer</option>
+
+<option value="0.9">Weak acid/base</option>
+<option value="0.85">Acetic acid</option>
+
+<option value="0.8">HCl / H2SO4</option>
+<option value="0.75">H₃PO₄</option>
+
+<option value="0.7">NaOH / KOH</option>
+<option value="0.65">Ammonia</option>
+
+<option value="0.6">Reducing agents</option>
+<option value="0.5">H₂O₂</option>
+
+<option value="0.45">Organic oxidants</option>
+<option value="0.4">Metal catalysts</option>
+
+<option value="0.35">Strong oxidizers</option>
+<option value="0.3">Toxic reagents</option>
+
+<option value="custom">Custom</option>
+
+</select>
+
+<input id="customHazard"
+placeholder="Enter score (0–1)"
+style="display:none;"><br>
+
 </div>
 
-<div class="box" id="out">Ready ✅</div>
+<!-- ✅ RUN BEFORE FIGURE -->
+<div class="section" style="text-align:center;">
+<button onclick="run()">RUN ANALYSIS</button>
+</div>
 
-<canvas id="chart" width="350" height="350"></canvas>
+<!-- ✅ CHART -->
+<div class="section" style="text-align:center;">
+<svg id="chart" width="350" height="350"></svg>
 
-<p style="text-align:center;font-size:12px;color:#555;">
-Figure 1: Radar plot illustrating sustainability performance metrics.
-</p>
+<!-- ✅ LEGEND -->
+<div style="margin-top:10px;font-size:13px">
+<span style="color:#2ecc71">■</span> Excellent
+&nbsp;&nbsp;
+<span style="color:#f1c40f">■</span> Good
+&nbsp;&nbsp;
+<span style="color:#e67e22">■</span> Moderate
+&nbsp;&nbsp;
+<span style="color:#e74c3c">■</span> Poor
+</div>
+
+</div>
+
+</div>
 
 <script>
 
-let chart;
+// ✅ START ANALYSIS (SCROLL TO INPUTS)
+function startAnalysis(){
+ document.getElementById("inputs").scrollIntoView({
+  behavior:"smooth"
+ });
 
-// ✅ Smooth Scroll
-function scrollToTool(){
-  document.getElementById("tool").scrollIntoView({
-    behavior: "smooth"
-  });
+ setTimeout(()=>{
+  document.getElementById("flow").focus();
+ },500);
 }
 
-// RUN
-function runAnalysis(){
 
-  let f = parseFloat(flow.value)||1;
-  let t = parseFloat(time.value)||1;
-  let tempVal = parseFloat(temp.value)||25;
-  let resVal = parseFloat(res.value)||1;
-  let injVal = parseFloat(inj.value)||10;
-  let phVal = parseFloat(ph.value)||7;
+// ✅ toggle custom (SAFE VERSION)
 
-  let op = (1/f + 1/t + (tempVal<40?1:tempVal<60?0.7:0.4))/3;
-  let perf = resVal>=2?1:resVal>=1.5?0.7:0.4;
-  let waste = (f*t*injVal)<200?1:0.6;
-  let phScore = (phVal>=6 && phVal<=8)?1:0.6;
+window.onload = function(){
 
-  let score = (op+perf+waste+phScore)/4;
+ document.getElementById("solvent").onchange = function(){
+  document.getElementById("customSolvent").style.display =
+  this.value === "custom" ? "inline" : "none";
+ };
 
-  document.getElementById("out").innerHTML =
-    "<h2>Score = "+score.toFixed(2)+"</h2>";
+ document.getElementById("hazard").onchange = function(){
+  document.getElementById("customHazard").style.display =
+  this.value === "custom" ? "inline" : "none";
+ };
 
-  drawChart({
-    Operational:op,
-    Performance:perf,
-    Waste:waste,
-    pH:phScore
-  });
+};
+
+// ✅ color scale
+function color(v){
+ if(v>=0.8) return "#2ecc71";
+ if(v>=0.6) return "#f1c40f";
+ if(v>=0.4) return "#e67e22";
+ return "#e74c3c";
 }
 
-// COMPARE
-function compareMethods(){
+// ✅ RUN
+function run(){
 
-  let A=(1/(flowA.value||1)+1/(timeA.value||1))/2;
-  let B=(1/(flowB.value||1)+1/(timeB.value||1))/2;
+if(parseFloat(document.getElementById("flow").value) <= 0){
+  alert("Flow should be>0");
+  return;
+ }
 
-  document.getElementById("out").innerHTML =
-    "Method A = "+A.toFixed(2)+"<br>Method B = "+B.toFixed(2);
+ let f=parseFloat(document.getElementById("flow").value)||1;
+ let t=parseFloat(document.getElementById("time").value)||1;
+ let temp=parseFloat(document.getElementById("temp").value)||25;
+ let res=parseFloat(document.getElementById("res").value)||1;
+ let inj=parseFloat(document.getElementById("inj").value)||10;
+ let ph=parseFloat(document.getElementById("ph").value)||7;
+
+ let solventSel=document.getElementById("solvent").value;
+ let solvent = solventSel==="custom"
+ ? parseFloat(document.getElementById("customSolvent").value)||0.5
+ : parseFloat(solventSel);
+
+ let hazardSel=document.getElementById("hazard").value;
+ let hazard = hazardSel==="custom"
+ ? parseFloat(document.getElementById("customHazard").value)||0.5
+ : parseFloat(hazardSel);
+
+ let organic=parseFloat(document.getElementById("organic").value)||50;
+ let instrument=parseFloat(document.getElementById("instrument").value);
+ let analytes=parseFloat(document.getElementById("analytes").value)||3;
+
+ let op=(1/f+1/t+(temp<40?1:0.7))/3;
+ let perf=res>=2?1:0.7;
+ let consumption=(f*t<200?1:0.6);
+ let composition=(organic<=30?1:organic<=60?0.7:0.4);
+ let complexity=(analytes<=5?1:0.6);
+
+ draw({
+  Operational:op,
+  Performance:perf,
+  Solvent:solvent,
+  Composition:composition,
+  Consumption:consumption,
+  Hazard:hazard,
+  Instrument:instrument,
+  Complexity:complexity
+ });
 }
 
-// CHART
-function drawChart(data){
+// ✅ DRAW
+function draw(data){
 
-  if(chart) chart.destroy();
+ let svg=document.getElementById("chart");
+ svg.innerHTML="";
 
-  chart=new Chart(document.getElementById("chart"),{
-    type:'radar',
-    data:{
-      labels:Object.keys(data),
-      datasets:[{
-        label:"Score",
-        data:Object.values(data),
-        backgroundColor:"rgba(46,204,113,0.2)",
-        borderColor:"#2ecc71"
-      }]
-    },
-    options:{
-      responsive:false,
-      animation:false,
-      scales:{ r:{min:0,max:1} }
-    }
-  });
+ let cx=175,cy=175,r=110;
+
+ let values=Object.values(data);
+ let labels=Object.keys(data);
+
+ let step=2*Math.PI/values.length;
+ let score=values.reduce((a,b)=>a+b)/values.length;
+
+ values.forEach((v,i)=>{
+
+  let start=-Math.PI/2+i*step;
+  let end=start+step;
+
+  let x1=cx+r*Math.cos(start);
+  let y1=cy+r*Math.sin(start);
+
+  let x2=cx+r*Math.cos(end);
+  let y2=cy+r*Math.sin(end);
+
+  let path=document.createElementNS("http://www.w3.org/2000/svg","path");
+
+  path.setAttribute("d",
+   `M ${cx} ${cy}
+    L ${x1} ${y1}
+    A ${r} ${r} 0 0 1 ${x2} ${y2}
+    Z`);
+
+  path.setAttribute("fill",color(v));
+  svg.appendChild(path);
+
+  // ✅ labels
+  let mid=start+step/2;
+  let lx=cx+(r+25)*Math.cos(mid);
+  let ly=cy+(r+25)*Math.sin(mid);
+
+  let text=document.createElementNS("http://www.w3.org/2000/svg","text");
+  text.setAttribute("x",lx);
+  text.setAttribute("y",ly);
+  text.setAttribute("text-anchor","middle");
+  text.setAttribute("font-size","12");
+  text.setAttribute("font-weight","bold");
+  text.setAttribute("fill","#1f2d3d"); 
+  text.textContent=labels[i];
+  svg.appendChild(text);
+ });
+
+ // center
+ let c=document.createElementNS("http://www.w3.org/2000/svg","circle");
+ c.setAttribute("cx",cx);
+ c.setAttribute("cy",cy);
+ c.setAttribute("r",60);
+ c.setAttribute("fill","white");
+ svg.appendChild(c);
+
+ let txt=document.createElementNS("http://www.w3.org/2000/svg","text");
+ txt.setAttribute("x",cx);
+ txt.setAttribute("y",cy+5);
+ txt.setAttribute("text-anchor","middle");
+ txt.setAttribute("font-size","24");
+ txt.setAttribute("font-weight","bold");
+ txt.textContent=score.toFixed(2);
+ svg.appendChild(txt);
 }
 
-// PDF
-function exportPDF(){
+// ✅ PNG EXPORT
+function downloadPNG(){
 
-  let img = document.getElementById("chart").toDataURL("image/png");
+ let svg=document.getElementById("chart");
 
-  let w = window.open("");
+ if(svg.innerHTML===""){
+  alert("Run analysis first!");
+  return;
+ }
 
-  w.document.write(`
-  <html>
-  <head>
-  <style>
-    body{font-family:Arial;padding:30px;width:700px;margin:auto}
-    .figure{
-      page-break-inside: avoid;
-      break-inside: avoid;
-      text-align:center;
-    }
-  </style>
-  </head>
+ let data=new XMLSerializer().serializeToString(svg);
 
-  <body>
+ let img=new Image();
+ let url=URL.createObjectURL(new Blob([data],{type:"image/svg+xml"}));
 
-  <h1 style="text-align:center">WISE5 Report</h1>
+ img.onload=function(){
 
-  <h2>Sample Info</h2>
-  Sample: ${sample.value}<br>
-  Method: ${method.value}<br>
-  Column: ${column.value}<br>
-  Detector: ${detector.value}<br>
+  let canvas=document.createElement("canvas");
+  canvas.width=1000;
+  canvas.height=1000;
 
-  <hr>
+  let ctx=canvas.getContext("2d");
+  ctx.fillStyle="white";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-  <h2>Conditions</h2>
-  Flow: ${flow.value}<br>
-  Time: ${time.value}<br>
-  Temp: ${temp.value}<br>
-  Resolution: ${res.value}<br>
-  Injection: ${inj.value}<br>
-  pH: ${ph.value}<br>
+  ctx.drawImage(img,0,0,1000,1000);
 
-  <hr>
+  let a=document.createElement("a");
+  a.href=canvas.toDataURL();
+  a.download="WISE5.png";
+  a.click();
+ };
 
-  <h2>Results</h2>
-  ${document.getElementById("out").innerHTML}
-
-  <hr>
-
-  <h2>Figure</h2>
-
-<div style="
-  text-align:center;
-  page-break-inside: avoid;
-  break-inside: avoid;
-  margin-top:10px;
-">
-
-  <img src="${img}" style="width:300px">
-
-</div>
-
-  </body>
-  </html>
-  `);
-
-  w.document.close();
-
-  setTimeout(()=>{w.print();},500);
+ img.src=url;
 }
 
 </script>
