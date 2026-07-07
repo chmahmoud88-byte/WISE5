@@ -454,14 +454,17 @@ svg.appendChild(line);
   text.setAttribute("font-weight","bold");
   text.setAttribute("fill","#1f2d3d"); 
   text.textContent=labels[i];
-  svg.appendChild(text);
- });
+  
+svg.appendChild(text);
 
- // center
+});   // نهاية forEach
+
+// center
+
  let c=document.createElementNS("http://www.w3.org/2000/svg","circle");
  c.setAttribute("cx",cx);
  c.setAttribute("cy",cy);
- c.setAttribute("r",75);
+ c.setAttribute("r",65);
  c.setAttribute("fill","white");
  svg.appendChild(c);
 
@@ -506,12 +509,14 @@ sub.setAttribute("font-size","12");
 
 sub.textContent="Sustainability Score";
 
+
 svg.appendChild(sub);
 
-}
+} // نهاية draw()
 
 // ✅ PNG EXPORT
 function downloadPNG(){
+
 
  let svg=document.getElementById("chart");
 
