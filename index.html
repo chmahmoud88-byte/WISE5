@@ -159,22 +159,7 @@ style="display:none;"><br>
 <div class="section" style="text-align:center;">
 <button onclick="run()">RUN ANALYSIS</button>
 </div>
-try{
- draw({
-  Operational:op,
-  Performance:perf,
-  Solvent:solvent,
-  Composition:composition,
-  Consumption:consumption,
-  Hazard:hazard,
-  Instrument:instrument,
-  Complexity:complexity
- });
-}
-catch(err){
- console.log(err);
- alert(err);
-}
+
 <!-- ✅ CHART -->
 <div class="section" style="text-align:center;">
 <svg id="chart" width="350" height="350"></svg>
