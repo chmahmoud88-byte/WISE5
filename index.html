@@ -157,7 +157,24 @@ style="display:none;"><br>
 
 <!-- ✅ RUN BEFORE FIGURE -->
 <div class="section" style="text-align:center;">
-<button onclick="run()">RUN ANALYSIS</button>
+<button onclick="run(
+try{
+ draw({
+  Operational:op,
+  Performance:perf,
+  Solvent:solvent,
+  Composition:composition,
+  Consumption:consumption,
+  Hazard:hazard,
+  Instrument:instrument,
+  Complexity:complexity
+ });
+}
+catch(err){
+ console.log(err);
+ alert(err);
+}
+)">RUN ANALYSIS</button>
 </div>
 
 <!-- ✅ CHART -->
@@ -303,16 +320,18 @@ function draw(data){
  let values=Object.values(data);
  let labels=Object.keys(data);
 
+
 const icons={
- Operational:"⚙",
- Performance:"📈",
- Solvent:"⚗",
- Composition:"◔",
- Consumption:"💧",
- Hazard:"🛡",
- Instrument:"🖥",
- Complexity:"✳"
+ Operational:"O",
+ Performance:"P",
+ Solvent:"S",
+ Composition:"C",
+ Consumption:"W",
+ Hazard:"H",
+ Instrument:"I",
+ Complexity:"X"
 };
+
 
  let step=2*Math.PI/values.length;
 
@@ -335,19 +354,24 @@ score=Math.min(1,score);
   let start=-Math.PI/2+i*step;
   let end=start+step;
 
-  let x1=cx+r*Math.cos(start);
-  let y1=cy+r*Math.sin(start);
+  
+let innerR = 75;
 
-  let x2=cx+r*Math.cos(end);
-  let y2=cy+r*Math.sin(end);
+let x3=cx+innerR*Math.cos(end);
+let y3=cy+innerR*Math.sin(end);
 
-  let path=document.createElementNS("http://www.w3.org/2000/svg","path");
+let x4=cx+innerR*Math.cos(start);
+let y4=cy+innerR*Math.sin(start);
 
-  path.setAttribute("d",
-   `M ${cx} ${cy}
-    L ${x1} ${y1}
-    A ${r} ${r} 0 0 1 ${x2} ${y2}
-    Z`);
+path.setAttribute("d",
+`
+M ${x1} ${y1}
+A ${r} ${r} 0 0 1 ${x2} ${y2}
+L ${x3} ${y3}
+A ${innerR} ${innerR} 0 0 0 ${x4} ${y4}
+Z
+`);
+
 
   
 path.setAttribute("fill",color(v));
@@ -359,8 +383,9 @@ svg.appendChild(path);
   
 let mid=start+step/2;
 
-let ix=cx+(r-60)*Math.cos(mid);
-let iy=cy+(r-60)*Math.sin(mid);
+
+let ix=cx+((r+75)/2)*Math.cos(mid);
+let iy=cy+((r+75)/2)*Math.sin(mid)-15;
 
 let icon=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -379,8 +404,10 @@ icon.textContent=icons[labels[i]];
 
 svg.appendChild(icon);
 
-let tx=cx+(r-35)*Math.cos(mid);
-let ty=cy+(r-35)*Math.sin(mid);
+
+let tx=cx+((r+75)/2)*Math.cos(mid);
+let ty=cy+((r+75)/2)*Math.sin(mid);
+
 
 let scoreText=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -402,7 +429,6 @@ svg.appendChild(scoreText);
 
 
   // ✅ labels
-  let mid=start+step/2;
   let lx=cx+(r+25)*Math.cos(mid);
   let ly=cy+(r+25)*Math.sin(mid);
 
