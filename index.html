@@ -376,12 +376,15 @@ path.setAttribute("stroke-width","4");
 
 svg.appendChild(path);
   
-let mid=start+step/2;
 
 
+let centerR=(r+innerR)/2;
 
-let ix=cx+85*Math.cos(mid);
-let iy=cy+85*Math.sin(mid)-10;
+let centerX=cx+centerR*Math.cos(mid);
+let centerY=cy+centerR*Math.sin(mid);
+
+let ix=centerX;
+let iy=centerY-10;
 
 let icon=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -392,7 +395,7 @@ icon.setAttribute("x",ix);
 icon.setAttribute("y",iy);
 
 icon.setAttribute("text-anchor","middle");
-icon.setAttribute("font-size","24");
+icon.setAttribute("font-size","20");
 
 icon.setAttribute("fill","white");
 
@@ -402,8 +405,8 @@ svg.appendChild(icon);
 
 
 
-let tx=cx+95*Math.cos(mid);
-let ty=cy+95*Math.sin(mid)+15;
+let tx=centerX;
+let ty=centerY+12;
 
 
 let scoreText=document.createElementNS(
@@ -415,7 +418,7 @@ scoreText.setAttribute("x",tx);
 scoreText.setAttribute("y",ty);
 
 scoreText.setAttribute("text-anchor","middle");
-scoreText.setAttribute("font-size","16");
+scoreText.setAttribute("font-size","14");
 scoreText.setAttribute("font-weight","bold");
 
 scoreText.setAttribute("fill","white");
@@ -426,20 +429,20 @@ svg.appendChild(scoreText);
 
 
   // ✅ labels
-  let lx=cx+(r+55)*Math.cos(mid);
-  let ly=cy+(r+55)*Math.sin(mid);
+  let lx=cx+(r+35)*Math.cos(mid);
+  let ly=cy+(r+35)*Math.sin(mid);
 
 let line=document.createElementNS(
 "http://www.w3.org/2000/svg",
 "line"
 );
 
-let lx1=cx+(r+2)*Math.cos(mid);
-let ly1=cy+(r+2)*Math.sin(mid);
+let lx1=cx+(r+5)*Math.cos(mid);
+let ly1=cy+(r+5)*Math.sin(mid);
 
 
-let lx2=cx+(r+50)*Math.cos(mid);
-let ly2=cy+(r+50)*Math.sin(mid);
+let lx2=cx+(r+20)*Math.cos(mid);
+let ly2=cy+(r+20)*Math.sin(mid);
 
 
 line.setAttribute("x1",lx1);
