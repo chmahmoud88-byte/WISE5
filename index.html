@@ -162,8 +162,7 @@ style="display:none;"><br>
 
 <!-- ✅ CHART -->
 <div class="section" style="text-align:center;">
-<svg id="chart" width="350" height="350"></svg>
-
+<svg id="chart" width="550" height="550"></svg>
 <!-- ✅ LEGEND -->
 <div style="margin-top:10px;font-size:13px">
 <span style="color:#2ecc71">■</span> Excellent
@@ -298,10 +297,11 @@ function draw(data){
  let svg=document.getElementById("chart");
  svg.innerHTML="";
 
- let cx=175,cy=175,r=110;
+ let cx=275,cy=275,r=160;
 
  let values=Object.values(data);
  let labels=Object.keys(data);
+
 
 
 
@@ -312,9 +312,10 @@ const icons={
  Composition:"◔",
  Consumption:"💧",
  Hazard:"🛡",
- Instrument:"⌘",
+ Instrument:"🖥",
  Complexity:"✳"
 };
+
 
 
 
@@ -346,7 +347,7 @@ let y1=cy+r*Math.sin(start);
 let x2=cx+r*Math.cos(end);
 let y2=cy+r*Math.sin(end);
 
-let innerR=75;
+let innerR=90;
 
 let x3=cx+innerR*Math.cos(end);
 let y3=cy+innerR*Math.sin(end);
@@ -379,8 +380,8 @@ let mid=start+step/2;
 
 
 
-let ix=cx+92*Math.cos(mid);
-let iy=cy+92*Math.sin(mid)-12;
+let ix=cx+85*Math.cos(mid);
+let iy=cy+85*Math.sin(mid)-10;
 
 let icon=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -401,8 +402,8 @@ svg.appendChild(icon);
 
 
 
-let tx=cx+92*Math.cos(mid);
-let ty=cy+92*Math.sin(mid)+12;
+let tx=cx+95*Math.cos(mid);
+let ty=cy+95*Math.sin(mid)+15;
 
 
 let scoreText=document.createElementNS(
@@ -425,8 +426,8 @@ svg.appendChild(scoreText);
 
 
   // ✅ labels
-  let lx=cx+(r+25)*Math.cos(mid);
-  let ly=cy+(r+25)*Math.sin(mid);
+  let lx=cx+(r+55)*Math.cos(mid);
+  let ly=cy+(r+55)*Math.sin(mid);
 
 let line=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -437,8 +438,8 @@ let lx1=cx+(r+2)*Math.cos(mid);
 let ly1=cy+(r+2)*Math.sin(mid);
 
 
-let lx2=cx+(r+35)*Math.cos(mid);
-let ly2=cy+(r+35)*Math.sin(mid);
+let lx2=cx+(r+50)*Math.cos(mid);
+let ly2=cy+(r+50)*Math.sin(mid);
 
 
 line.setAttribute("x1",lx1);
