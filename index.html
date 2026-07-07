@@ -157,7 +157,8 @@ style="display:none;"><br>
 
 <!-- ✅ RUN BEFORE FIGURE -->
 <div class="section" style="text-align:center;">
-<button onclick="run(
+<button onclick="run()">RUN ANALYSIS</button>
+</div>
 try{
  draw({
   Operational:op,
@@ -174,9 +175,6 @@ catch(err){
  console.log(err);
  alert(err);
 }
-)">RUN ANALYSIS</button>
-</div>
-
 <!-- ✅ CHART -->
 <div class="section" style="text-align:center;">
 <svg id="chart" width="350" height="350"></svg>
@@ -349,19 +347,30 @@ let score =
 score = Math.min(1, score);
 score=Math.min(1,score);
 
- values.forEach((v,i)=>{
+ 
+values.forEach((v,i)=>{
 
-  let start=-Math.PI/2+i*step;
-  let end=start+step;
+let start=-Math.PI/2+i*step;
+let end=start+step;
 
-  
-let innerR = 75;
+let x1=cx+r*Math.cos(start);
+let y1=cy+r*Math.sin(start);
+
+let x2=cx+r*Math.cos(end);
+let y2=cy+r*Math.sin(end);
+
+let innerR=75;
 
 let x3=cx+innerR*Math.cos(end);
 let y3=cy+innerR*Math.sin(end);
 
 let x4=cx+innerR*Math.cos(start);
 let y4=cy+innerR*Math.sin(start);
+
+let path=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"path"
+);
 
 path.setAttribute("d",
 `
@@ -371,9 +380,7 @@ L ${x3} ${y3}
 A ${innerR} ${innerR} 0 0 0 ${x4} ${y4}
 Z
 `);
-
-
-  
+ 
 path.setAttribute("fill",color(v));
 
 path.setAttribute("stroke","white");
