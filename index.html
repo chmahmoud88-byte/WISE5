@@ -303,6 +303,17 @@ function draw(data){
  let values=Object.values(data);
  let labels=Object.keys(data);
 
+const icons={
+ Operational:"⚙",
+ Performance:"📈",
+ Solvent:"⚗",
+ Composition:"◔",
+ Consumption:"💧",
+ Hazard:"🛡",
+ Instrument:"🖥",
+ Complexity:"✳"
+};
+
  let step=2*Math.PI/values.length;
 
 
@@ -338,13 +349,84 @@ score=Math.min(1,score);
     A ${r} ${r} 0 0 1 ${x2} ${y2}
     Z`);
 
-  path.setAttribute("fill",color(v));
-  svg.appendChild(path);
+  
+path.setAttribute("fill",color(v));
+
+path.setAttribute("stroke","white");
+path.setAttribute("stroke-width","4");
+
+svg.appendChild(path);
+  
+let mid=start+step/2;
+
+let ix=cx+(r-60)*Math.cos(mid);
+let iy=cy+(r-60)*Math.sin(mid);
+
+let icon=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"text"
+);
+
+icon.setAttribute("x",ix);
+icon.setAttribute("y",iy);
+
+icon.setAttribute("text-anchor","middle");
+icon.setAttribute("font-size","24");
+
+icon.setAttribute("fill","white");
+
+icon.textContent=icons[labels[i]];
+
+svg.appendChild(icon);
+
+let tx=cx+(r-35)*Math.cos(mid);
+let ty=cy+(r-35)*Math.sin(mid);
+
+let scoreText=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"text"
+);
+
+scoreText.setAttribute("x",tx);
+scoreText.setAttribute("y",ty);
+
+scoreText.setAttribute("text-anchor","middle");
+scoreText.setAttribute("font-size","16");
+scoreText.setAttribute("font-weight","bold");
+
+scoreText.setAttribute("fill","white");
+
+scoreText.textContent=v.toFixed(2);
+
+svg.appendChild(scoreText);
+
 
   // ✅ labels
   let mid=start+step/2;
   let lx=cx+(r+25)*Math.cos(mid);
   let ly=cy+(r+25)*Math.sin(mid);
+
+let line=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"line"
+);
+
+let lx1=cx+(r+2)*Math.cos(mid);
+let ly1=cy+(r+2)*Math.sin(mid);
+
+let lx2=cx+(r+20)*Math.cos(mid);
+let ly2=cy+(r+20)*Math.sin(mid);
+
+line.setAttribute("x1",lx1);
+line.setAttribute("y1",ly1);
+
+line.setAttribute("x2",lx2);
+line.setAttribute("y2",ly2);
+
+line.setAttribute("stroke","#1f2d3d");
+line.setAttribute("stroke-width","2");
+
+svg.appendChild(line);
 
   let text=document.createElementNS("http://www.w3.org/2000/svg","text");
   text.setAttribute("x",lx);
@@ -361,7 +443,7 @@ score=Math.min(1,score);
  let c=document.createElementNS("http://www.w3.org/2000/svg","circle");
  c.setAttribute("cx",cx);
  c.setAttribute("cy",cy);
- c.setAttribute("r",60);
+ c.setAttribute("r",75);
  c.setAttribute("fill","white");
  svg.appendChild(c);
 
@@ -371,8 +453,43 @@ score=Math.min(1,score);
  txt.setAttribute("text-anchor","middle");
  txt.setAttribute("font-size","24");
  txt.setAttribute("font-weight","bold");
+ 
+let title=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"text"
+);
+
+title.setAttribute("x",cx);
+title.setAttribute("y",cy-20);
+
+title.setAttribute("text-anchor","middle");
+
+title.setAttribute("font-size","20");
+title.setAttribute("font-weight","bold");
+
+title.textContent="WISE5";
+
+svg.appendChild(title);
+
  txt.textContent=score.toFixed(2);
  svg.appendChild(txt);
+ 
+let sub=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"text"
+);
+
+sub.setAttribute("x",cx);
+sub.setAttribute("y",cy+35);
+
+sub.setAttribute("text-anchor","middle");
+
+sub.setAttribute("font-size","12");
+
+sub.textContent="Sustainability Score";
+
+svg.appendChild(sub);
+
 }
 
 // ✅ PNG EXPORT
