@@ -340,13 +340,17 @@ values.forEach((v,i)=>{
 
 let start=-Math.PI/2+i*step;
 let end=start+step;
+
 let mid=start+step/2;
 
-let x1=cx+r*Math.cos(start);
-let y1=cy+r*Math.sin(start);
+let centerR=(r+innerR)/2;
 
-let x2=cx+r*Math.cos(end);
-let y2=cy+r*Math.sin(end);
+let lx2=cx+(r+12)*Math.cos(mid);
+let ly2=cy+(r+12)*Math.sin(mid);
+
+let lx=cx+(r+55)*Math.cos(mid);
+let ly=cy+(r+55)*Math.sin(mid);
+
 
 let innerR=90;
 
