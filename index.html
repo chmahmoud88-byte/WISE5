@@ -279,6 +279,7 @@ consumption=clamp(consumption);
 hazard=clamp(hazard);
 instrument=clamp(instrument);
 complexity=clamp(complexity);
+console.log(op, perf, solvent, composition, consumption, hazard, instrument, complexity);
  draw({
   Operational:op,
   Performance:perf,
@@ -304,8 +305,18 @@ function draw(data){
 
  let step=2*Math.PI/values.length;
 
-let score=values.reduce((a,b)=>a+b,0)/values.length;
 
+let score =
+(0.15 * data.Operational) +
+(0.10 * data.Performance) +
+(0.20 * data.Solvent) +
+(0.15 * data.Composition) +
+(0.10 * data.Consumption) +
+(0.15 * data.Hazard) +
+(0.05 * data.Instrument) +
+(0.10 * data.Complexity);
+
+score = Math.min(1, score);
 score=Math.min(1,score);
 
  values.forEach((v,i)=>{
