@@ -304,16 +304,18 @@ function draw(data){
  let labels=Object.keys(data);
 
 
+
 const icons={
- Operational:"O",
- Performance:"P",
- Solvent:"S",
- Composition:"C",
- Consumption:"W",
- Hazard:"H",
- Instrument:"I",
- Complexity:"X"
+ Operational:"⚙",
+ Performance:"📈",
+ Solvent:"⚗",
+ Composition:"◔",
+ Consumption:"💧",
+ Hazard:"🛡",
+ Instrument:"⌘",
+ Complexity:"✳"
 };
+
 
 
  let step=2*Math.PI/values.length;
@@ -376,8 +378,9 @@ svg.appendChild(path);
 let mid=start+step/2;
 
 
-let ix=cx+((r+75)/2)*Math.cos(mid);
-let iy=cy+((r+75)/2)*Math.sin(mid)-15;
+
+let ix=cx+92*Math.cos(mid);
+let iy=cy+92*Math.sin(mid)-12;
 
 let icon=document.createElementNS(
 "http://www.w3.org/2000/svg",
@@ -397,8 +400,9 @@ icon.textContent=icons[labels[i]];
 svg.appendChild(icon);
 
 
-let tx=cx+((r+75)/2)*Math.cos(mid);
-let ty=cy+((r+75)/2)*Math.sin(mid);
+
+let tx=cx+92*Math.cos(mid);
+let ty=cy+92*Math.sin(mid)+12;
 
 
 let scoreText=document.createElementNS(
@@ -432,8 +436,10 @@ let line=document.createElementNS(
 let lx1=cx+(r+2)*Math.cos(mid);
 let ly1=cy+(r+2)*Math.sin(mid);
 
-let lx2=cx+(r+20)*Math.cos(mid);
-let ly2=cy+(r+20)*Math.sin(mid);
+
+let lx2=cx+(r+35)*Math.cos(mid);
+let ly2=cy+(r+35)*Math.sin(mid);
+
 
 line.setAttribute("x1",lx1);
 line.setAttribute("y1",ly1);
@@ -472,7 +478,7 @@ svg.appendChild(text);
  txt.setAttribute("x",cx);
  txt.setAttribute("y",cy+5);
  txt.setAttribute("text-anchor","middle");
- txt.setAttribute("font-size","24");
+ txt.setAttribute("font-size","22");
  txt.setAttribute("font-weight","bold");
  
 let title=document.createElementNS(
@@ -485,7 +491,7 @@ title.setAttribute("y",cy-20);
 
 title.setAttribute("text-anchor","middle");
 
-title.setAttribute("font-size","20");
+title.setAttribute("font-size","16");
 title.setAttribute("font-weight","bold");
 
 title.textContent="WISE5";
@@ -505,7 +511,7 @@ sub.setAttribute("y",cy+35);
 
 sub.setAttribute("text-anchor","middle");
 
-sub.setAttribute("font-size","12");
+sub.setAttribute("font-size","10");
 
 sub.textContent="Sustainability Score";
 
