@@ -430,8 +430,8 @@ svg.appendChild(scoreText);
 
   
 // ✅ labels
-let lx=cx+(r+60)*Math.cos(mid);
-let ly=cy+(r+60)*Math.sin(mid);
+let lx=cx+(r+55)*Math.cos(mid);
+let ly=cy+(r+55)*Math.sin(mid);
 
 
 let lx1=cx+(r+4)*Math.cos(mid);
@@ -454,7 +454,7 @@ line.setAttribute("x2",lx2);
 line.setAttribute("y2",ly2);
 
 line.setAttribute("stroke","#1f2d3d");
-line.setAttribute("stroke-width","2.5");
+line.setAttribute("stroke-width","1.5");
 
 svg.appendChild(line);
 
@@ -467,7 +467,7 @@ let dot1=document.createElementNS(
 dot1.setAttribute("cx",lx1);
 dot1.setAttribute("cy",ly1);
 
-dot1.setAttribute("r","4");
+dot1.setAttribute("r","2.5");
 dot1.setAttribute("fill","#1f2d3d");
 
 svg.appendChild(dot1);
@@ -481,7 +481,7 @@ let dot2=document.createElementNS(
 dot2.setAttribute("cx",lx2);
 dot2.setAttribute("cy",ly2);
 
-dot2.setAttribute("r","4");
+dot2.setAttribute("r","2.5");
 dot2.setAttribute("fill","#1f2d3d");
 
 svg.appendChild(dot2);
