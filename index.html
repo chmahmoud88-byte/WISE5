@@ -430,21 +430,15 @@ svg.appendChild(scoreText);
 
 
   // ✅ labels
-  let lx=cx+(r+35)*Math.cos(mid);
-  let ly=cy+(r+35)*Math.sin(mid);
+  let lx=cx+(r+45)*Math.cos(mid);
+  let ly=cy+(r+45)*Math.sin(mid);
 
+
+// line
 let line=document.createElementNS(
 "http://www.w3.org/2000/svg",
 "line"
 );
-
-let lx1=cx+(r+5)*Math.cos(mid);
-let ly1=cy+(r+5)*Math.sin(mid);
-
-
-let lx2=cx+(r+20)*Math.cos(mid);
-let ly2=cy+(r+20)*Math.sin(mid);
-
 
 line.setAttribute("x1",lx1);
 line.setAttribute("y1",ly1);
@@ -453,9 +447,38 @@ line.setAttribute("x2",lx2);
 line.setAttribute("y2",ly2);
 
 line.setAttribute("stroke","#1f2d3d");
-line.setAttribute("stroke-width","2");
+line.setAttribute("stroke-width","2.5");
 
 svg.appendChild(line);
+
+// first dot
+let dot1=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"circle"
+);
+
+dot1.setAttribute("cx",lx1);
+dot1.setAttribute("cy",ly1);
+
+dot1.setAttribute("r","4");
+dot1.setAttribute("fill","#1f2d3d");
+
+svg.appendChild(dot1);
+
+// second dot
+let dot2=document.createElementNS(
+"http://www.w3.org/2000/svg",
+"circle"
+);
+
+dot2.setAttribute("cx",lx2);
+dot2.setAttribute("cy",ly2);
+
+dot2.setAttribute("r","4");
+dot2.setAttribute("fill","#1f2d3d");
+
+svg.appendChild(dot2);
+
 
   let text=document.createElementNS("http://www.w3.org/2000/svg","text");
   text.setAttribute("x",lx);
