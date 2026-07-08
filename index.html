@@ -379,10 +379,11 @@ path.setAttribute("stroke-width","4");
 svg.appendChild(path);
  
 
-let centerR=(r+innerR)/2;
+let centerR = innerR + (r-innerR)/2;
 
 let centerX=cx+centerR*Math.cos(mid);
 let centerY=cy+centerR*Math.sin(mid);
+
 
 let ix=centerX;
 let iy=centerY-12;
@@ -427,9 +428,17 @@ scoreText.textContent=v.toFixed(2);
 svg.appendChild(scoreText);
 
 
-  // ✅ labels
-  let lx=cx+(r+45)*Math.cos(mid);
-  let ly=cy+(r+45)*Math.sin(mid);
+  
+// ✅ labels
+let lx=cx+(r+60)*Math.cos(mid);
+let ly=cy+(r+60)*Math.sin(mid);
+
+
+let lx1=cx+(r+4)*Math.cos(mid);
+let ly1=cy+(r+4)*Math.sin(mid);
+
+let lx2=cx+(r+18)*Math.cos(mid);
+let ly2=cy+(r+18)*Math.sin(mid);
 
 
 // line
@@ -496,7 +505,7 @@ svg.appendChild(text);
  let c=document.createElementNS("http://www.w3.org/2000/svg","circle");
  c.setAttribute("cx",cx);
  c.setAttribute("cy",cy);
- c.setAttribute("r",65);
+ c.setAttribute("r",80);
  c.setAttribute("fill","white");
  svg.appendChild(c);
 
