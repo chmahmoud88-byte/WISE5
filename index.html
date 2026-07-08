@@ -336,23 +336,21 @@ score = Math.min(1, score);
 score=Math.min(1,score);
 
 
+
 values.forEach((v,i)=>{
 
 let start=-Math.PI/2+i*step;
 let end=start+step;
 let mid=start+step/2;
 
-// Outer circle points
 let x1=cx+r*Math.cos(start);
 let y1=cy+r*Math.sin(start);
 
 let x2=cx+r*Math.cos(end);
 let y2=cy+r*Math.sin(end);
 
-// Inner circle radius
 let innerR=90;
 
-// Inner circle points
 let x3=cx+innerR*Math.cos(end);
 let y3=cy+innerR*Math.sin(end);
 
