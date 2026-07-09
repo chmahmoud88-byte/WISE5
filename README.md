@@ -43,6 +43,8 @@ WISE5 provides both numerical evaluation and circular visualization to support t
 - Number of analytes
 
 ---
+Figure caption
+<img width="1090" height="765" alt="image" src="https://github.com/user-attachments/assets/06dcd164-b997-4cb3-921e-7fe4c0105b20" />
 
 ## 📊 Output
 
@@ -101,7 +103,7 @@ WISE5 is archived and assigned a DOI via Zenodo:
 If you use WISE5 in academic research, please cite:
 
 ```text
-Mohamed MA, Khashoqji MM, Alminderej FM, et al.
+Mohamed MA, et al.
 
 WISE5: A Multidimensional Analytical Parameter Integrated Tool
 for Sustainability Evaluation of Chromatographic Techniques.
