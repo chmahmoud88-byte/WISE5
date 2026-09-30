@@ -174,7 +174,7 @@
         <input type="number" id="temp" step="1" value="30">
       </div>
       <div class="form-group">
-        <label for="res">Chromatographic Resolution ($R_s$)</label>
+        <label for="res">Chromatographic Resolution (Rs)</label>
         <input type="number" id="res" step="0.1" value="2.0">
       </div>
       <div class="form-group">
@@ -194,21 +194,27 @@
     <div class="grid-form">
       <div class="form-group">
         <label for="solvent">Primary Organic Solvent</label>
+        <!--
+          Solvent scores updated to match Table 4 (GHS/NFPA-based, Reviewer 3
+          Comment 8 revision): "Greenness scores (Psolv) and GHS hazard
+          classifications of solvents utilized in the WISE5 sustainability
+          framework". Butanol removed - not listed in current Table 4; add
+          back with a sourced value if it is reinstated in the manuscript.
+        -->
         <select id="solvent">
-          <option value="1">Water</option>
+          <option value="1.00">Water</option>
           <option value="0.95">Buffer</option>
-          <option value="0.9" selected>Ethanol</option>
-          <option value="0.85">Isopropanol</option>
-          <option value="0.8">Ethyl acetate</option>
-          <option value="0.7">Methanol</option>
-          <option value="0.65">Butanol</option>
-          <option value="0.6">Acetone</option>
-          <option value="0.5">Dichloromethane</option>
-          <option value="0.4">Acetonitrile</option>
-          <option value="0.35">Chloroform</option>
-          <option value="0.3">THF</option>
-          <option value="0.25">Toluene</option>
-          <option value="0.2">Hexane</option>
+          <option value="0.75" selected>Ethanol</option>
+          <option value="0.80">Isopropanol</option>
+          <option value="0.80">Ethyl acetate</option>
+          <option value="0.80">Acetone</option>
+          <option value="0.70">Methanol</option>
+          <option value="0.30">Acetonitrile</option>
+          <option value="0.20">Tetrahydrofuran (THF)</option>
+          <option value="0.10">Dichloromethane (DCM)</option>
+          <option value="0.10">Chloroform</option>
+          <option value="0.10">Toluene</option>
+          <option value="0.10">n-Hexane</option>
           <option value="custom">Custom Score</option>
         </select>
         <input type="number" id="customSolvent" class="custom-input" placeholder="Enter score (0.0 – 1.0)" min="0" max="1" step="0.01" style="display:none;">
@@ -349,6 +355,11 @@ function run() {
   // Operational Sub-scoring
   let flowScore = (f <= 0.3) ? 1.0 : (f <= 0.6) ? 0.8 : (f <= 1.0) ? 0.6 : 0.4;
   let timeScore = (t <= 5) ? 1.0 : (t <= 10) ? 0.8 : (t <= 20) ? 0.6 : 0.4;
+  // NOTE: unchanged in this update - still the tool's original 3-tier scheme
+  // (<40 / <=60 / >60), NOT Table 2's currently-stated 4-tier scheme
+  // (<=30/31-40/41-50/>50). Table 2 still needs to be corrected to match
+  // this, per the code-vs-manuscript check performed previously. Changing
+  // this logic now would silently invalidate every already-reported score.
   let tempScore = (temp < 40) ? 1.0 : (temp <= 60) ? 0.8 : 0.6;
   
   let op = (flowScore + timeScore + tempScore) / 3;
