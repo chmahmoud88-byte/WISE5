@@ -153,7 +153,8 @@
     <p class="subtitle">Multi-metric circular evaluation framework for analytical chromatography methods</p>
     <div class="btn-group">
       <button class="btn-primary" onclick="scrollToInputs()">Start Assessment</button>
-      <button class="btn-secondary" onclick="downloadPNG()">Export High-Res PNG</button>
+      <button class="btn-secondary" onclick="downloadPNG()">🖼️ Export High-Res PNG</button>
+      <button class="btn-secondary" onclick="downloadPDF()">📄 Save PDF</button>
     </div>
   </div>
 
@@ -174,7 +175,7 @@
         <input type="number" id="temp" step="1" value="30">
       </div>
       <div class="form-group">
-        <label for="res">Chromatographic Resolution (Rs)</label>
+        <label for="res">Chromatographic Resolution ($R_s$)</label>
         <input type="number" id="res" step="0.1" value="2.0">
       </div>
       <div class="form-group">
@@ -204,13 +205,13 @@
         <select id="solvent">
           <option value="1.00">Water</option>
           <option value="0.95">Buffer</option>
-          <option value="0.75" selected>Ethanol</option>
+          <option value="0.90" selected>Ethanol</option>
           <option value="0.80">Isopropanol</option>
           <option value="0.80">Ethyl acetate</option>
           <option value="0.80">Acetone</option>
           <option value="0.70">Methanol</option>
-          <option value="0.30">Acetonitrile</option>
-          <option value="0.20">Tetrahydrofuran (THF)</option>
+          <option value="0.40">Acetonitrile</option>
+          <option value="0.30">Tetrahydrofuran (THF)</option>
           <option value="0.10">Dichloromethane (DCM)</option>
           <option value="0.10">Chloroform</option>
           <option value="0.10">Toluene</option>
@@ -296,6 +297,7 @@
 
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
 function scrollToInputs() {
   document.getElementById("inputs").scrollIntoView({ behavior: "smooth" });
@@ -381,6 +383,9 @@ function run() {
 
   draw(data);
   populateSummary(data);
+
+  // Store the latest run for PDF export
+  window._lastWISE5Data = data;
 }
 
 function draw(data) {
@@ -416,6 +421,7 @@ function draw(data) {
     (0.10 * data.Complexity);
 
   score = clamp(score);
+  window._lastWISE5Score = score;
 
   values.forEach((v, i) => {
     const start = -Math.PI / 2 + i * step;
@@ -586,6 +592,99 @@ function downloadPNG() {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  img.src = url;
+}
+
+function downloadPDF() {
+  const svg = document.getElementById("chart");
+
+  if (svg.innerHTML === "" || !window._lastWISE5Data) {
+    alert("Please calculate the profile prior to exporting.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const serializer = new XMLSerializer();
+  let svgString = serializer.serializeToString(svg);
+
+  if (!svgString.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    svgString = svgString.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  const img = new Image();
+  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 900;
+    canvas.height = 900;
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, 900, 900);
+
+    const chartDataUrl = canvas.toDataURL("image/png");
+    URL.revokeObjectURL(url);
+
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 40;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("WISE5 Sustainability Assessment Report", pageWidth / 2, y, { align: "center" });
+    y += 20;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text("Generated " + new Date().toLocaleString(), pageWidth / 2, y, { align: "center" });
+    doc.setTextColor(0);
+    y += 25;
+
+    const imgSize = 260;
+    const imgX = (pageWidth - imgSize) / 2;
+    doc.addImage(chartDataUrl, "PNG", imgX, y, imgSize, imgSize);
+    y += imgSize + 20;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    const overallScore = window._lastWISE5Score.toFixed(2);
+    doc.text("Overall WISE5 Score: " + overallScore, pageWidth / 2, y, { align: "center" });
+    y += 30;
+
+    doc.setFontSize(12);
+    doc.text("Parameter Evaluation Breakdown", 40, y);
+    y += 10;
+    doc.setLineWidth(0.5);
+    doc.line(40, y, pageWidth - 40, y);
+    y += 18;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("Sub-Metric", 40, y);
+    doc.text("Score", 300, y);
+    doc.text("Rating", 400, y);
+    y += 12;
+    doc.setLineWidth(0.3);
+    doc.line(40, y, pageWidth - 40, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    Object.entries(window._lastWISE5Data).forEach(([key, val]) => {
+      const ratingText = val >= 0.8 ? "Excellent" : val >= 0.6 ? "Good" : val >= 0.4 ? "Moderate" : "Poor";
+      doc.text(String(key), 40, y);
+      doc.text(val.toFixed(2), 300, y);
+      doc.text(ratingText, 400, y);
+      y += 16;
+    });
+
+    doc.save("WISE5_Sustainability_Report.pdf");
   };
 
   img.src = url;
