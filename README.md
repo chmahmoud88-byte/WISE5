@@ -1,4 +1,4 @@
-# WISE5 – Weighted Integrated Sustainability Evaluation
+# WISE5 Greenness Index Tool
 
 ## 🔬 Overview
 WISE5 is a web-based sustainability assessment tool developed for chromatographic analytical methods.
