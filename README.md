@@ -100,11 +100,7 @@ The hazard profile is scored once per method, using the single highest-hazard re
 | Custom | user-defined (0.00–1.00) |
 
 ---
-Screenshot of the tool for the default case (see Supplementary Figure S1 of the manuscript):
-
-![WISE5 tool output for the default case: WISE5 = 0.97 (0.9695 to four decimals)](screenshots/Figure_S1_tool_default_case.png)
-
-The default case is ethanol, 0.5 mL/min, 5 min, 30 °C, Rs = 2.0, 30% organic, UPLC, 2 analytes and no hazardous reagent. See also the [input form](screenshots/tool_inputs_default_case.png) and the [parameter breakdown with the inputs list](screenshots/tool_breakdown_default_case.png).
+<img width="1095" height="718" alt="image" src="https://github.com/user-attachments/assets/b055deaf-e337-4cbc-9fff-ac16e4594b10" />
 
 ## ⚠️ Scope and Limitations
 
