@@ -1,0 +1,80 @@
+{
+ "baseline": {
+  "[30]": 0.9025000000000001,
+  "[31]": 0.7020000000000002,
+  "[32]": 0.787,
+  "[33]": 0.89,
+  "[34]": 0.8375,
+  "[35]": 0.7225,
+  "[36]": 0.6870000000000002
+ },
+ "methods": {
+  "[30]": {
+   "largest_single_delta": -0.010500000000000065,
+   "delta_min": -0.010500000000000065,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [
+    "run time +5 %"
+   ],
+   "rank_order_changed": false
+  },
+  "[31]": {
+   "largest_single_delta": -0.009000000000000008,
+   "delta_min": -0.019500000000000073,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [
+    "flow rate +5 %",
+    "run time +5 %"
+   ],
+   "rank_order_changed": true
+  },
+  "[32]": {
+   "largest_single_delta": 0.0,
+   "delta_min": 0.0,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [],
+   "rank_order_changed": false
+  },
+  "[33]": {
+   "largest_single_delta": 0.0,
+   "delta_min": 0.0,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [],
+   "rank_order_changed": false
+  },
+  "[34]": {
+   "largest_single_delta": 0.0,
+   "delta_min": 0.0,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [],
+   "rank_order_changed": false
+  },
+  "[35]": {
+   "largest_single_delta": -0.010499999999999954,
+   "delta_min": -0.019499999999999962,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [
+    "flow rate +5 %",
+    "run time +5 %"
+   ],
+   "rank_order_changed": false
+  },
+  "[36]": {
+   "largest_single_delta": -0.009000000000000008,
+   "delta_min": -0.009000000000000008,
+   "delta_max": 0.0,
+   "inputs_crossing_threshold": [
+    "run time +5 %"
+   ],
+   "rank_order_changed": false
+  }
+ },
+ "random_5pct": {
+  "draws": 20000,
+  "draws_with_reversal_of_methods_with_different_baseline_scores": 2534,
+  "draws_where_top_method_changed": 0,
+  "tie_31_36_remains": 0,
+  "31_above_36": 17466,
+  "36_above_31": 2534
+ }
+}

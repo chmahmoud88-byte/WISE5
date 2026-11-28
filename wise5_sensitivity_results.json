@@ -1,0 +1,393 @@
+{
+ "baseline": {
+  "[30]": 0.9025,
+  "[31]": 0.702,
+  "[32]": 0.787,
+  "[33]": 0.89,
+  "[34]": 0.8375,
+  "[35]": 0.7225,
+  "[36]": 0.687
+ },
+ "baseline_rank": {
+  "[30]": 1,
+  "[31]": 6,
+  "[32]": 4,
+  "[33]": 2,
+  "[34]": 3,
+  "[35]": 5,
+  "[36]": 7
+ },
+ "S7": [
+  {
+   "scenario": "Baseline",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Consumption",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Operational Efficiency",
+   "rho_base": 0.964,
+   "ranks": [
+    2,
+    6,
+    4,
+    1,
+    3,
+    5,
+    7
+   ],
+   "top": "[33]",
+   "rho_agree": 0.6,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Operational Efficiency + Consumption",
+   "rho_base": 0.964,
+   "ranks": [
+    2,
+    6,
+    4,
+    1,
+    3,
+    5,
+    7
+   ],
+   "top": "[33]",
+   "rho_agree": 0.6,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Halve Operational Efficiency and Consumption",
+   "rho_base": 0.964,
+   "ranks": [
+    2,
+    6,
+    4,
+    1,
+    3,
+    5,
+    7
+   ],
+   "top": "[33]",
+   "rho_agree": 0.667,
+   "rho_mogapi": 0.684
+  },
+  {
+   "scenario": "Drop Composition",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Composition + Consumption",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Halve solvent block (Solvent Type, Composition, Consumption, Hazard)",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Solvent Type",
+   "rho_base": 0.964,
+   "ranks": [
+    1,
+    6,
+    3,
+    2,
+    4,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.4,
+   "rho_mogapi": 0.359
+  },
+  {
+   "scenario": "Drop Hazard Profile",
+   "rho_base": 0.982,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    2,
+    5,
+    6
+   ],
+   "top": "[30]",
+   "rho_agree": 0.821,
+   "rho_mogapi": 0.763
+  },
+  {
+   "scenario": "Drop Instrument Efficiency",
+   "rho_base": 0.964,
+   "ranks": [
+    2,
+    6,
+    4,
+    1,
+    3,
+    5,
+    7
+   ],
+   "top": "[33]",
+   "rho_agree": 0.667,
+   "rho_mogapi": 0.684
+  },
+  {
+   "scenario": "Drop Analytical Performance",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Drop Method Complexity",
+   "rho_base": 0.893,
+   "ranks": [
+    1,
+    5,
+    4,
+    2,
+    3,
+    7,
+    6
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Double Method Complexity",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  },
+  {
+   "scenario": "Equal weights (0.125 each)",
+   "rho_base": 1.0,
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "top": "[30]",
+   "rho_agree": 0.7,
+   "rho_mogapi": 0.667
+  }
+ ],
+ "OAT50": {
+  "min_rho": 0.9642857142857145,
+  "all_top_34": false,
+  "n_top_30": 14,
+  "n_top_33": 2,
+  "n_cases": 16
+ },
+ "S8": {
+  "+-20%": {
+   "rho_base_median_p5": [
+    1.0,
+    1.0
+   ],
+   "rho_agree_median_p5": [
+    0.7,
+    0.6668859288553503
+   ],
+   "rho_mogapi_median_p5": [
+    0.6668859288553501,
+    0.6668859288553501
+   ],
+   "top_is_34_pct": 0.0,
+   "top_is_30_pct": 98.42,
+   "keep_baseline_rank_pct": {
+    "[30]": 98.42,
+    "[31]": 100.0,
+    "[32]": 100.0,
+    "[33]": 98.42,
+    "[34]": 100.0,
+    "[35]": 100.0,
+    "[36]": 100.0
+   },
+   "pair_30_33_swap_pct": 1.58
+  },
+  "+-50%": {
+   "rho_base_median_p5": [
+    1.0,
+    0.9642857142857145
+   ],
+   "rho_agree_median_p5": [
+    0.7,
+    0.39999999999999997
+   ],
+   "rho_mogapi_median_p5": [
+    0.6668859288553501,
+    0.35909242322980395
+   ],
+   "top_is_34_pct": 0.025,
+   "top_is_30_pct": 77.11,
+   "keep_baseline_rank_pct": {
+    "[30]": 77.11,
+    "[31]": 90.84,
+    "[32]": 90.23,
+    "[33]": 76.67,
+    "[34]": 89.71000000000001,
+    "[35]": 90.84,
+    "[36]": 99.565
+   },
+   "pair_30_33_swap_pct": 22.865
+  },
+  "uniform simplex": {
+   "rho_base_median_p5": [
+    0.9285714285714288,
+    0.7142857142857144
+   ],
+   "rho_agree_median_p5": [
+    0.7,
+    0.0
+   ],
+   "rho_mogapi_median_p5": [
+    0.6668859288553501,
+    -0.051298917604257706
+   ],
+   "top_is_34_pct": 10.190000000000001,
+   "top_is_30_pct": 76.92999999999999,
+   "keep_baseline_rank_pct": {
+    "[30]": 76.92999999999999,
+    "[31]": 61.605,
+    "[32]": 65.595,
+    "[33]": 46.794999999999995,
+    "[34]": 25.655,
+    "[35]": 56.830000000000005,
+    "[36]": 70.585
+   },
+   "pair_30_33_swap_pct": 15.909999999999998
+  }
+ },
+ "ACN_check": {
+  "0.55": {
+   "scores": {
+    "[30]": 0.9025,
+    "[31]": 0.732,
+    "[32]": 0.817,
+    "[33]": 0.89,
+    "[34]": 0.8375,
+    "[35]": 0.7525,
+    "[36]": 0.717
+   },
+   "ranks": [
+    1,
+    6,
+    4,
+    2,
+    3,
+    5,
+    7
+   ],
+   "rho_base": 1.0
+  },
+  "0.7": {
+   "scores": {
+    "[30]": 0.9025,
+    "[31]": 0.762,
+    "[32]": 0.847,
+    "[33]": 0.89,
+    "[34]": 0.8375,
+    "[35]": 0.7825,
+    "[36]": 0.747
+   },
+   "ranks": [
+    1,
+    6,
+    3,
+    2,
+    4,
+    5,
+    7
+   ],
+   "rho_base": 0.964
+  }
+ }
+}

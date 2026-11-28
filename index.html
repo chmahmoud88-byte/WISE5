@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WISE5 Greenness Index Tool</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f0f2f5;
+      color: #2c3e50;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #ffffff;
+      padding: 24px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    h2 {
+      margin-top: 0;
+      color: #1a252f;
+    }
+    .subtitle {
+      color: #7f8c8d;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #34495e;
+    }
+    .form-group input, .form-group select {
+      padding: 10px;
+      border: 1px solid #dcdfe6;
+      border-radius: 6px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: #2ecc71;
+    }
+    .custom-input {
+      margin-top: 8px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    .btn-primary {
+      background: #2ecc71;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #27ae60;
+    }
+    .btn-secondary {
+      background: #34495e;
+      color: white;
+    }
+    .btn-secondary:hover {
+      background: #2c3e50;
+    }
+    .chart-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .legend {
+      display: flex;
+      gap: 15px;
+      margin-top: 15px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+    }
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+    .results-table th, .results-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #eef1f6;
+    }
+    .results-table th {
+      background: #f8f9fa;
+      color: #7f8c8d;
+      font-weight: 600;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <div class="card" style="text-align: center;">
+    <h2>WISE5 Greenness Index Tool</h2>
+    <p class="subtitle">Operational and chemical greenness index for liquid chromatographic methods (not a life-cycle assessment)</p>
+    <div class="btn-group">
+      <button class="btn-primary" onclick="scrollToInputs()">Start Assessment</button>
+      <button class="btn-secondary" onclick="downloadPNG()">🖼️ Export High-Res PNG</button>
+      <button class="btn-secondary" onclick="downloadPDF()">📄 Save PDF</button>
+    </div>
+  </div>
+
+  <!-- Analytical Parameters -->
+  <div class="card" id="inputs">
+    <h3 style="margin-top:0;">1. Operational & Method Conditions</h3>
+    <div class="grid-form">
+      <div class="form-group">
+        <label for="flow">Flow Rate (mL/min)</label>
+        <input type="number" id="flow" step="0.01" value="0.5">
+      </div>
+      <div class="form-group">
+        <label for="time">Run Time (min)</label>
+        <input type="number" id="time" step="0.1" value="5.0">
+      </div>
+      <div class="form-group">
+        <label for="temp">Column Temperature (°C)</label>
+        <input type="number" id="temp" step="1" value="30">
+      </div>
+      <div class="form-group">
+        <label for="res">Chromatographic Resolution (Rs)</label>
+        <input type="number" id="res" step="0.1" value="2.0">
+      </div>
+    </div>
+  </div>
+
+  <!-- Reagent & Environmental Selection -->
+  <div class="card">
+    <h3 style="margin-top:0;">2. Green & Environmental Parameters</h3>
+    <div class="grid-form">
+      <div class="form-group">
+        <label for="solvent">Primary Organic Solvent</label>
+        <!-- Solvent scores follow Table 4 of the manuscript (tier rules in Table 4a). -->
+        <select id="solvent">
+          <option value="1.00">Water</option>
+          <option value="0.95">Buffer</option>
+          <option value="0.90" selected>Ethanol</option>
+          <option value="0.80">Isopropanol</option>
+          <option value="0.80">Ethyl acetate</option>
+          <option value="0.80">Acetone</option>
+          <option value="0.70">Methanol</option>
+          <option value="0.40">Acetonitrile</option>
+          <option value="0.30">Tetrahydrofuran (THF)</option>
+          <option value="0.10">Dichloromethane (DCM)</option>
+          <option value="0.10">Chloroform</option>
+          <option value="0.10">Toluene</option>
+          <option value="0.10">n-Hexane</option>
+          <option value="custom">Custom Score</option>
+        </select>
+        <input type="number" id="customSolvent" class="custom-input" placeholder="Enter score (0.0 – 1.0)" min="0" max="1" step="0.01" style="display:none;">
+      </div>
+
+      <div class="form-group">
+        <label for="organic">Organic Phase Percentage (%)</label>
+        <input type="number" id="organic" min="0" max="100" value="30">
+      </div>
+
+      <div class="form-group">
+        <label for="instrument">Instrument Technology</label>
+        <select id="instrument">
+          <option value="1" selected>UPLC / UHPLC</option>
+          <option value="0.7">HPLC</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="analytes">Number of Analytes</label>
+        <input type="number" id="analytes" min="1" value="2">
+      </div>
+
+      <div class="form-group">
+        <label for="hazard">Reagent Hazard Profile</label>
+        <select id="hazard">
+          <option value="1" selected>None</option>
+          <option value="0.95">Water / Buffer</option>
+          <option value="0.9">Weak acid/base</option>
+          <option value="0.85">Acetic acid</option>
+          <option value="0.8">HCl / H₂SO₄ / formic acid / TFA</option>
+          <option value="0.75">H₃PO₄</option>
+          <option value="0.7">NaOH / KOH</option>
+          <option value="0.65">Ammonia / triethylamine</option>
+          <option value="0.6">Reducing agents</option>
+          <option value="0.5">H₂O₂</option>
+          <option value="0.45">Organic oxidants</option>
+          <option value="0.4">Metal catalysts</option>
+          <option value="0.35">Strong oxidizers</option>
+          <option value="0.3">Toxic reagents</option>
+          <option value="custom">Custom Score</option>
+        </select>
+        <input type="number" id="customHazard" class="custom-input" placeholder="Enter score (0.0 – 1.0)" min="0" max="1" step="0.01" style="display:none;">
+      </div>
+    </div>
+  </div>
+
+  <!-- Run Action -->
+  <div class="card" style="text-align:center;">
+    <button class="btn-primary" style="font-size:16px; padding:12px 30px;" onclick="run()">Calculate & Generate Profile</button>
+  </div>
+
+  <!-- Chart & Analysis Output -->
+  <div class="card chart-container">
+    <svg id="chart" xmlns="http://www.w3.org/2000/svg" width="550" height="550"></svg>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-color" style="background:#2ecc71;"></div> Excellent (≥ 0.80)</div>
+      <div class="legend-item"><div class="legend-color" style="background:#f1c40f;"></div> Good (0.60 to &lt; 0.80)</div>
+      <div class="legend-item"><div class="legend-color" style="background:#e67e22;"></div> Moderate (0.40 to &lt; 0.60)</div>
+      <div class="legend-item"><div class="legend-color" style="background:#e74c3c;"></div> Poor (&lt; 0.40)</div>
+    </div>
+  </div>
+
+  <!-- Parameter Summary Table -->
+  <div class="card" id="summaryCard" style="display:none;">
+    <h3>Parameter Evaluation Breakdown</h3>
+    <table class="results-table">
+      <thead>
+        <tr>
+          <th>Sub-Metric</th>
+          <th>Calculated Score</th>
+          <th>Rating</th>
+        </tr>
+      </thead>
+      <tbody id="summaryBody"></tbody>
+    </table>
+    <div id="inputsNote" style="margin-top:14px; font-size:12px; font-weight:normal;"></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+function scrollToInputs() {
+  document.getElementById("inputs").scrollIntoView({ behavior: "smooth" });
+  setTimeout(() => {
+    document.getElementById("flow").focus();
+  }, 500);
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const solventSelect = document.getElementById("solvent");
+  const hazardSelect = document.getElementById("hazard");
+
+  solventSelect.addEventListener("change", function() {
+    document.getElementById("customSolvent").style.display = (this.value === "custom") ? "block" : "none";
+  });
+
+  hazardSelect.addEventListener("change", function() {
+    document.getElementById("customHazard").style.display = (this.value === "custom") ? "block" : "none";
+  });
+});
+
+function color(v) {
+  if (v >= 0.8) return "#2ecc71";
+  if (v >= 0.6) return "#f1c40f";
+  if (v >= 0.4) return "#e67e22";
+  return "#e74c3c";
+}
+
+function clamp(v) {
+  return Math.max(0, Math.min(1, v));
+}
+
+function run() {
+  // Input validation: no silent default values. Invalid or empty inputs stop the calculation.
+  function readNum(id, label, min, max, opts) {
+    opts = opts || {};
+    const raw = document.getElementById(id).value;
+    const v = parseFloat(raw);
+    if (raw.trim() === "" || !isFinite(v)) { alert(label + ": please enter a number."); return null; }
+    if ((opts.minExclusive ? v <= min : v < min) || v > max) {
+      alert(label + ": value must be " + (opts.minExclusive ? "greater than " : "at least ") + min + (max < Infinity ? " and at most " + max : "") + ".");
+      return null;
+    }
+    if (opts.integer && !Number.isInteger(v)) { alert(label + ": value must be a whole number."); return null; }
+    return v;
+  }
+  const f = readNum("flow", "Flow rate (mL/min)", 0, Infinity, { minExclusive: true });
+  const t = readNum("time", "Run time (min)", 0, Infinity, { minExclusive: true });
+  const temp = readNum("temp", "Column temperature (°C)", -20, 150);
+  const res = readNum("res", "Resolution (Rs)", 0, Infinity);
+  const organic = readNum("organic", "Organic phase percentage (%)", 0, 100);
+  const analytes = readNum("analytes", "Number of analytes", 1, Infinity, { integer: true });
+  if ([f, t, temp, res, organic, analytes].some(v => v === null)) return;
+  const instrument = parseFloat(document.getElementById("instrument").value);
+
+  const solventSel = document.getElementById("solvent").value;
+  const solvent = (solventSel === "custom")
+    ? readNum("customSolvent", "Custom solvent score", 0, 1)
+    : parseFloat(solventSel);
+  const hazardSel = document.getElementById("hazard").value;
+  const hazard = (hazardSel === "custom")
+    ? readNum("customHazard", "Custom hazard score", 0, 1)
+    : parseFloat(hazardSel);
+  if (solvent === null || hazard === null) return;
+
+  // Operational Sub-scoring
+  let flowScore = (f <= 0.3) ? 1.0 : (f <= 0.6) ? 0.8 : (f <= 1.0) ? 0.6 : 0.4;
+  let timeScore = (t <= 5) ? 1.0 : (t <= 10) ? 0.8 : (t <= 20) ? 0.6 : 0.4;
+  // Temperature tiers follow Table 2: <40 °C = 1.0; 40–60 °C = 0.8; >60 °C = 0.6
+  let tempScore = (temp < 40) ? 1.0 : (temp <= 60) ? 0.8 : 0.6;
+  
+  // Operational Efficiency is rounded to two decimals, as in Table S3 of the manuscript.
+  let op = Math.round(((flowScore + timeScore + tempScore) / 3) * 100) / 100;
+  let perf = (res >= 2.0) ? 1.0 : 0.7;
+  let consumption = ((f * t) < 200) ? 1.0 : 0.6;
+  let composition = (organic <= 30) ? 1.0 : (organic <= 60) ? 0.7 : 0.4;
+  let complexity = (analytes <= 5) ? 1.0 : 0.6;
+
+  const data = {
+    Operational: clamp(op),
+    Performance: clamp(perf),
+    Solvent: clamp(solvent),
+    Composition: clamp(composition),
+    Consumption: clamp(consumption),
+    Hazard: clamp(hazard),
+    Instrument: clamp(instrument),
+    Complexity: clamp(complexity)
+  };
+
+  draw(data);
+  populateSummary(data);
+
+  // Store the latest run (scores and the inputs that produced them) for display and PDF export
+  window._lastWISE5Data = data;
+  window._lastWISE5Inputs = {
+    "Flow rate (mL/min)": f, "Run time (min)": t, "Column temperature (°C)": temp, "Resolution (Rs)": res,
+    "Solvent score (Psolv)": solvent, "Organic phase (%)": organic,
+    "Instrument": instrument === 1 ? "UPLC / UHPLC" : "HPLC", "Number of analytes": analytes,
+    "Hazard score (highest-hazard reagent)": hazard
+  };
+  showInputs();
+}
+
+function draw(data) {
+  const svg = document.getElementById("chart");
+  svg.innerHTML = "";
+
+  const cx = 275, cy = 275, r = 160, innerR = 90;
+  const values = Object.values(data);
+  const labels = Object.keys(data);
+
+  const icons = {
+    Operational: "⚙",
+    Performance: "📈",
+    Solvent: "⚗",
+    Composition: "◔",
+    Consumption: "💧",
+    Hazard: "🛡",
+    Instrument: "🖥",
+    Complexity: "✳"
+  };
+
+  const step = (2 * Math.PI) / values.length;
+
+  // Weighted overall calculation
+  let score =
+    (0.15 * data.Operational) +
+    (0.10 * data.Performance) +
+    (0.20 * data.Solvent) +
+    (0.15 * data.Composition) +
+    (0.10 * data.Consumption) +
+    (0.15 * data.Hazard) +
+    (0.05 * data.Instrument) +
+    (0.10 * data.Complexity);
+
+  score = clamp(score);
+  window._lastWISE5Score = score;
+
+  values.forEach((v, i) => {
+    const start = -Math.PI / 2 + i * step;
+    const end = start + step;
+    const mid = start + step / 2;
+
+    const x1 = cx + r * Math.cos(start);
+    const y1 = cy + r * Math.sin(start);
+    const x2 = cx + r * Math.cos(end);
+    const y2 = cy + r * Math.sin(end);
+
+    const x3 = cx + innerR * Math.cos(end);
+    const y3 = cy + innerR * Math.sin(end);
+    const x4 = cx + innerR * Math.cos(start);
+    const y4 = cy + innerR * Math.sin(start);
+
+    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path.setAttribute("d", `M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${innerR} ${innerR} 0 0 0 ${x4} ${y4} Z`);
+    path.setAttribute("fill", color(v));
+    path.setAttribute("stroke", "#ffffff");
+    path.setAttribute("stroke-width", "3");
+    svg.appendChild(path);
+
+    // Inner Labels & Icons
+    const centerR = innerR + (r - innerR) / 2;
+    const centerX = cx + centerR * Math.cos(mid);
+    const centerY = cy + centerR * Math.sin(mid);
+
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    icon.setAttribute("x", centerX);
+    icon.setAttribute("y", centerY - 10);
+    icon.setAttribute("text-anchor", "middle");
+    icon.setAttribute("font-size", "18");
+    icon.setAttribute("fill", "#ffffff");
+    icon.textContent = icons[labels[i]] || "";
+    svg.appendChild(icon);
+
+    const scoreText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    scoreText.setAttribute("x", centerX);
+    scoreText.setAttribute("y", centerY + 12);
+    scoreText.setAttribute("text-anchor", "middle");
+    scoreText.setAttribute("font-size", "13");
+    scoreText.setAttribute("font-weight", "bold");
+    scoreText.setAttribute("fill", "#ffffff");
+    scoreText.textContent = v.toFixed(2);
+    svg.appendChild(scoreText);
+
+    // Outer Sector Indicators & Labels
+    const lx = cx + (r + 50) * Math.cos(mid);
+    const ly = cy + (r + 50) * Math.sin(mid);
+    const lx1 = cx + (r + 4) * Math.cos(mid);
+    const ly1 = cy + (r + 4) * Math.sin(mid);
+    const lx2 = cx + (r + 18) * Math.cos(mid);
+    const ly2 = cy + (r + 18) * Math.sin(mid);
+
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute("x1", lx1); line.setAttribute("y1", ly1);
+    line.setAttribute("x2", lx2); line.setAttribute("y2", ly2);
+    line.setAttribute("stroke", "#2c3e50");
+    line.setAttribute("stroke-width", "1.5");
+    svg.appendChild(line);
+
+    const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    dot.setAttribute("cx", lx2); dot.setAttribute("cy", ly2);
+    dot.setAttribute("r", "2"); dot.setAttribute("fill", "#2c3e50");
+    svg.appendChild(dot);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute("x", lx);
+    text.setAttribute("y", ly + 4);
+    text.setAttribute("text-anchor", "middle");
+    text.setAttribute("font-size", "12");
+    text.setAttribute("font-weight", "bold");
+    text.setAttribute("fill", "#2c3e50");
+    text.textContent = labels[i];
+    svg.appendChild(text);
+  });
+
+  // Central Hub
+  const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  c.setAttribute("cx", cx); c.setAttribute("cy", cy);
+  c.setAttribute("r", 75);
+  c.setAttribute("fill", "#ffffff");
+  c.setAttribute("filter", "drop-shadow(0px 2px 4px rgba(0,0,0,0.1))");
+  svg.appendChild(c);
+
+  const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  title.setAttribute("x", cx); title.setAttribute("y", cy - 18);
+  title.setAttribute("text-anchor", "middle");
+  title.setAttribute("font-size", "15");
+  title.setAttribute("font-weight", "bold");
+  title.setAttribute("fill", "#2c3e50");
+  title.textContent = "WISE5";
+  svg.appendChild(title);
+
+  const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  txt.setAttribute("x", cx); txt.setAttribute("y", cy + 8);
+  txt.setAttribute("text-anchor", "middle");
+  txt.setAttribute("font-size", "24");
+  txt.setAttribute("font-weight", "bold");
+  txt.setAttribute("fill", color(score));
+  txt.textContent = score.toFixed(2);
+  svg.appendChild(txt);
+
+  const sub = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  sub.setAttribute("x", cx); sub.setAttribute("y", cy + 28);
+  sub.setAttribute("text-anchor", "middle");
+  sub.setAttribute("font-size", "10");
+  sub.setAttribute("fill", "#7f8c8d");
+  sub.textContent = "Overall Score";
+  svg.appendChild(sub);
+}
+
+const TOOL_INFO = "WISE5 Greenness Index Tool - Zenodo: https://doi.org/10.5281/zenodo.24569165";
+const TOOL_SCOPE = "WISE5 is an operational and chemical greenness index. It is not a life-cycle assessment, its weights are expert-assigned and not calibrated, and agreement with other tools is not validation. Scores depend on the inputs entered; report the inputs with the score.";
+
+function showInputs() {
+  const el = document.getElementById("inputsNote");
+  if (!el || !window._lastWISE5Inputs) return;
+  const rows = Object.entries(window._lastWISE5Inputs).map(([k, v]) => "<li>" + k + ": <strong>" + v + "</strong></li>").join("");
+  el.innerHTML = "<p style='margin:0 0 6px 0;'><strong>Overall WISE5 score (4 decimals): " + window._lastWISE5Score.toFixed(4) + "</strong></p>" +
+    "<p style='margin:0 0 4px 0;'>Inputs used:</p><ul style='margin:0 0 8px 18px; padding:0;'>" + rows + "</ul>" +
+    "<p style='margin:0; color:#7f8c8d;'>" + TOOL_SCOPE + "</p>";
+}
+
+function populateSummary(data) {
+  const summaryCard = document.getElementById("summaryCard");
+  const tbody = document.getElementById("summaryBody");
+  tbody.innerHTML = "";
+
+  Object.entries(data).forEach(([key, val]) => {
+    const row = document.createElement("tr");
+    const hexColor = color(val);
+    let ratingText = val >= 0.8 ? "Excellent" : val >= 0.6 ? "Good" : val >= 0.4 ? "Moderate" : "Poor";
+    
+    row.innerHTML = `
+      <td><strong>${key}</strong></td>
+      <td>${val.toFixed(2)}</td>
+      <td><span class="badge" style="background:${hexColor}">${ratingText}</span></td>
+    `;
+    tbody.appendChild(row);
+  });
+
+  summaryCard.style.display = "block";
+  showInputs();
+}
+
+function downloadPNG() {
+  const svg = document.getElementById("chart");
+
+  if (svg.innerHTML === "") {
+    alert("Please calculate the profile prior to exporting.");
+    return;
+  }
+
+  const serializer = new XMLSerializer();
+  let svgString = serializer.serializeToString(svg);
+
+  if (!svgString.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    svgString = svgString.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  const img = new Image();
+  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 1200;
+    canvas.height = 1200;
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, 1200, 1200);
+
+    const a = document.createElement("a");
+    a.href = canvas.toDataURL("image/png");
+    a.download = "WISE5_Greenness_Profile.png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  img.src = url;
+}
+
+function downloadPDF() {
+  const svg = document.getElementById("chart");
+
+  if (svg.innerHTML === "" || !window._lastWISE5Data) {
+    alert("Please calculate the profile prior to exporting.");
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+
+  const serializer = new XMLSerializer();
+  let svgString = serializer.serializeToString(svg);
+
+  if (!svgString.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)) {
+    svgString = svgString.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+  }
+
+  const img = new Image();
+  const blob = new Blob([svgString], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  img.onload = function() {
+    const canvas = document.createElement("canvas");
+    canvas.width = 900;
+    canvas.height = 900;
+
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0, 900, 900);
+
+    const chartDataUrl = canvas.toDataURL("image/png");
+    URL.revokeObjectURL(url);
+
+    const doc = new jsPDF({ unit: "pt", format: "a4" });
+    const pageWidth = doc.internal.pageSize.getWidth();
+    let y = 40;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(18);
+    doc.text("WISE5 Greenness Index Report", pageWidth / 2, y, { align: "center" });
+    y += 20;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    doc.setTextColor(120);
+    doc.text("Generated " + new Date().toLocaleString(), pageWidth / 2, y, { align: "center" });
+    doc.setTextColor(0);
+    y += 25;
+
+    const imgSize = 260;
+    const imgX = (pageWidth - imgSize) / 2;
+    doc.addImage(chartDataUrl, "PNG", imgX, y, imgSize, imgSize);
+    y += imgSize + 20;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(14);
+    const overallScore = window._lastWISE5Score.toFixed(2);
+    doc.text("Overall WISE5 Score: " + overallScore, pageWidth / 2, y, { align: "center" });
+    y += 30;
+
+    doc.setFontSize(12);
+    doc.text("Parameter Evaluation Breakdown", 40, y);
+    y += 10;
+    doc.setLineWidth(0.5);
+    doc.line(40, y, pageWidth - 40, y);
+    y += 18;
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.text("Sub-Metric", 40, y);
+    doc.text("Score", 300, y);
+    doc.text("Rating", 400, y);
+    y += 12;
+    doc.setLineWidth(0.3);
+    doc.line(40, y, pageWidth - 40, y);
+    y += 14;
+
+    doc.setFont("helvetica", "normal");
+    Object.entries(window._lastWISE5Data).forEach(([key, val]) => {
+      const ratingText = val >= 0.8 ? "Excellent" : val >= 0.6 ? "Good" : val >= 0.4 ? "Moderate" : "Poor";
+      doc.text(String(key), 40, y);
+      doc.text(val.toFixed(2), 300, y);
+      doc.text(ratingText, 400, y);
+      y += 16;
+    });
+
+    y += 8;
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Overall score (4 decimals): " + window._lastWISE5Score.toFixed(4), 40, y);
+    y += 14;
+    doc.text("Inputs used:", 40, y);
+    y += 12;
+    Object.entries(window._lastWISE5Inputs || {}).forEach(([k, v]) => {
+      doc.text(k + ": " + v, 52, y);
+      y += 11;
+    });
+    y += 6;
+    doc.setTextColor(110);
+    doc.setFontSize(8);
+    doc.text(doc.splitTextToSize(TOOL_SCOPE, pageWidth - 80), 40, y);
+    y += 36;
+    doc.text(TOOL_INFO, 40, y);
+    doc.setTextColor(0);
+
+    doc.save("WISE5_Greenness_Report.pdf");
+  };
+
+  img.src = url;
+}
+
+// Initial calculation on load
+window.addEventListener("load", run);
+</script>
+
+</body>
+</html>
